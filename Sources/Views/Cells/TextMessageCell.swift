@@ -30,7 +30,7 @@ open class TextMessageCell: MessageContentCell {
 
     // MARK: - Properties
     
-    private let kIndicatorLeftOffset:CGFloat = 14
+    private let kIndicatorLeftOffset:CGFloat = 18
     private let kIdicatorWidhtOffset:CGFloat = 28
 
     /// The `MessageCellDelegate` for the cell.
