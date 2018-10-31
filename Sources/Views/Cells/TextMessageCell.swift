@@ -30,8 +30,8 @@ open class TextMessageCell: MessageContentCell {
 
     // MARK: - Properties
     
-    private let kIndicatorLeftOffset:CGFloat = 12
-    private let kIdicatorWidhtOffset:CGFloat = 15
+    private let kIndicatorLeftOffset:CGFloat = 14
+    private let kIdicatorWidhtOffset:CGFloat = 28
 
     /// The `MessageCellDelegate` for the cell.
     open override weak var delegate: MessageCellDelegate? {
