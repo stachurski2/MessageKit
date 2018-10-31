@@ -54,6 +54,15 @@ open class TextMessageSizeCalculator: MessageSizeCalculator {
             attributedText = text
         case .text(let text), .emoji(let text):
             attributedText = NSAttributedString(string: text, attributes: [.font: messageLabelFont])
+        
+        case .custom(let object as String):
+            if object == "indicator" {
+                 attributedText = NSAttributedString(string: "* * *",attributes: [.font: messageLabelFont])
+            } else {
+                 fatalError("messageContainerSize received unhandled MessageDataType: \(message.kind)")
+                
+            }
+            
         default:
             fatalError("messageContainerSize received unhandled MessageDataType: \(message.kind)")
         }

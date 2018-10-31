@@ -182,34 +182,45 @@ UICollectionViewDelegateFlowLayout, UICollectionViewDataSource {
     }
 
     open func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-
+    
         guard let messagesCollectionView = collectionView as? MessagesCollectionView else {
-            fatalError(MessageKitError.notMessagesCollectionView)
+            return UICollectionViewCell()
         }
-
+    
         guard let messagesDataSource = messagesCollectionView.messagesDataSource else {
-            fatalError(MessageKitError.nilMessagesDataSource)
+            return UICollectionViewCell()
         }
-
+    
         let message = messagesDataSource.messageForItem(at: indexPath, in: messagesCollectionView)
-
+    
         switch message.kind {
-        case .text, .attributedText, .emoji:
-            let cell = messagesCollectionView.dequeueReusableCell(TextMessageCell.self, for: indexPath)
-            cell.configure(with: message, at: indexPath, and: messagesCollectionView)
-            return cell
-        case .photo, .video:
-            let cell = messagesCollectionView.dequeueReusableCell(MediaMessageCell.self, for: indexPath)
-            cell.configure(with: message, at: indexPath, and: messagesCollectionView)
-            return cell
-        case .location:
-            let cell = messagesCollectionView.dequeueReusableCell(LocationMessageCell.self, for: indexPath)
-            cell.configure(with: message, at: indexPath, and: messagesCollectionView)
-            return cell
-        case .custom:
-            fatalError(MessageKitError.customDataUnresolvedCell)
+            case .text, .attributedText, .emoji:
+                let cell = messagesCollectionView.dequeueReusableCell(TextMessageCell.self, for: indexPath)
+                cell.configure(with: message, at: indexPath, and: messagesCollectionView)
+                return cell
+            case .photo, .video:
+                let cell = messagesCollectionView.dequeueReusableCell(MediaMessageCell.self, for: indexPath)
+                cell.configure(with: message, at: indexPath, and: messagesCollectionView)
+                return cell
+            case .location:
+                let cell = messagesCollectionView.dequeueReusableCell(LocationMessageCell.self, for: indexPath)
+                cell.configure(with: message, at: indexPath, and: messagesCollectionView)
+                return cell
+            case .custom(let object):
+                let cell = messagesCollectionView.dequeueReusableCell(TextMessageCell.self, for: indexPath)
+                cell.configure(with: message, at: indexPath, and: messagesCollectionView)
+        
+                if let object = object as? String,
+                    object == "indicator" {
+                        cell.setupIndicator()
+                        return cell
+                } else {
+                    return cell
+                }
         }
     }
+    
+    
 
     open func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
 
@@ -310,3 +321,4 @@ UICollectionViewDelegateFlowLayout, UICollectionViewDataSource {
         MessageStyle.bubbleImageCache.removeAllObjects()
     }
 }
+

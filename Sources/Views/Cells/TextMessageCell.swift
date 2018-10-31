@@ -24,10 +24,14 @@
 
 import UIKit
 
+
 /// A subclass of `MessageContentCell` used to display text messages.
 open class TextMessageCell: MessageContentCell {
 
     // MARK: - Properties
+    
+    private let kIndicatorLeftOffset:CGFloat = 12
+    private let kIdicatorWidhtOffset:CGFloat = 15
 
     /// The `MessageCellDelegate` for the cell.
     open override weak var delegate: MessageCellDelegate? {
@@ -38,6 +42,8 @@ open class TextMessageCell: MessageContentCell {
 
     /// The label used to display the message's text.
     open var messageLabel = MessageLabel()
+    
+    open var indicatorImageView = UIImageView()
 
     // MARK: - Methods
 
@@ -47,6 +53,12 @@ open class TextMessageCell: MessageContentCell {
             messageLabel.textInsets = attributes.messageLabelInsets
             messageLabel.messageLabelFont = attributes.messageLabelFont
             messageLabel.frame = messageContainerView.bounds
+            indicatorImageView.frame = CGRect(x: messageContainerView.bounds.minX + kIndicatorLeftOffset,
+                                              y: messageContainerView.bounds.minY,
+                                              width: messageContainerView.bounds.width - kIdicatorWidhtOffset,
+                                              height: messageContainerView.bounds.height)
+
+            indicatorImageView.contentMode = .scaleAspectFit
         }
     }
 
@@ -54,16 +66,18 @@ open class TextMessageCell: MessageContentCell {
         super.prepareForReuse()
         messageLabel.attributedText = nil
         messageLabel.text = nil
+        indicatorImageView.image = nil
     }
 
     open override func setupSubviews() {
         super.setupSubviews()
         messageContainerView.addSubview(messageLabel)
+        messageContainerView.addSubview(indicatorImageView)
     }
 
     open override func configure(with message: MessageType, at indexPath: IndexPath, and messagesCollectionView: MessagesCollectionView) {
         super.configure(with: message, at: indexPath, and: messagesCollectionView)
-
+        
         guard let displayDelegate = messagesCollectionView.messagesDisplayDelegate else {
             fatalError(MessageKitError.nilMessagesDisplayDelegate)
         }
@@ -90,6 +104,7 @@ open class TextMessageCell: MessageContentCell {
                 break
             }
         }
+
     }
     
     /// Used to handle the cell's contentView's tap gesture.
@@ -97,5 +112,11 @@ open class TextMessageCell: MessageContentCell {
     open override func cellContentView(canHandle touchPoint: CGPoint) -> Bool {
         return messageLabel.handleGesture(touchPoint)
     }
-
+    
+    open func setupIndicator(){
+        indicatorImageView.image = UIImage(contentsOfFile: MessageStyle.type.imagePath ?? "")?.withRenderingMode(UIImage.RenderingMode.alwaysTemplate)
+        indicatorImageView.tintColor = .gray
+    }
+    
 }
+
