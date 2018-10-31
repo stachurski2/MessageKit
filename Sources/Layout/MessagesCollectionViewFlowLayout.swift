@@ -162,8 +162,14 @@ open class MessagesCollectionViewFlowLayout: UICollectionViewFlowLayout {
             return videoMessageSizeCalculator
         case .location:
             return locationMessageSizeCalculator
-        case .custom:
-            fatalError("Must return a CellSizeCalculator for MessageKind.custom(Any?)")
+        case .custom(let object):
+            if let object = object as? String,
+                object == "indicator" {
+                return textMessageSizeCalculator
+            } else {
+                fatalError("Must return a CellSizeCalculator for MessageKind.custom(Any?)")
+
+            }
         }
     }
 
