@@ -87,7 +87,8 @@ public protocol MessageCellDelegate: MessageLabelDelegate {
     /// `indexPath(for: cell)` method. Then using the returned `IndexPath` with the `MessagesDataSource`
     /// method `messageForItem(at:indexPath:messagesCollectionView)`.
     func didTapAccessoryView(in cell: MessageCollectionViewCell)
-
+    
+    func didLongPressTap(in cell: MessageCollectionViewCell)
 }
 
 public extension MessageCellDelegate {
@@ -103,4 +104,7 @@ public extension MessageCellDelegate {
     func didTapMessageBottomLabel(in cell: MessageCollectionViewCell) {}
     
     func didTapAccessoryView(in cell: MessageCollectionViewCell) {}
+    
+    func didLongPressTap(in cell: MessageCollectionViewCell) {}
+
 }
